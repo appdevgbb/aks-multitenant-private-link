@@ -1,0 +1,17 @@
+# Terraform things
+
+.terraform/
+*.tfvars
+tfplan
+*.tfplan
+*.lock.hcl
+*.tfstate
+*.tfstate.backup
+
+# nginx things
+nginx-repo.jwt
+nginx-repo.key
+nginx-repo.crt
+
+# kubernetes things
+kube_config.yaml
