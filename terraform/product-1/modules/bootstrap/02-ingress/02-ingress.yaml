@@ -1,0 +1,71 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: my-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-protocol: "v2"
+    nginx.ingress.kubernetes.io/proxy-protocol-tlv: "0x000F:16;$proxy_protocol_tlv_azure_pel_id"
+    nginx.org/server-snippets: |
+      map $proxy_protocol_tlvs$proxy_protocol_tlv_azure_pel_id $backend_name {
+          default my-default-backend;
+          "<Azure Private Link ID 1>" my-backend-1;
+          "<Azure Private Link ID 2>" my-backend-2;
+          # Add additional mapping rules as needed
+      }
+      proxy_pass $backend_name:80;
+spec:
+  rules:
+    - host: example.com
+      tcp:
+        - port: 80
+          backend:
+            serviceName: my-service
+            servicePort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-protocol: "true"
+    nginx.ingress.kubernetes.io/use-proxy-protocol: "true"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      if ($proxy_protocol_pel_id = "<PEL-ID-1>") {
+          set $backend "backend-service-1";
+      }
+      if ($proxy_protocol_pel_id = "<PEL-ID-2>") {
+          set $backend "backend-service-2";
+      }
+      proxy_pass http://$backend;
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-protocol: "true"
+    nginx.ingress.kubernetes.io/use-proxy-protocol: "true"
+    nginx.ingress.kubernetes.io/proxy-protocol-tlv-azure-pel-id: "on"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      if ($proxy_protocol_pel_id = "<PEL-ID-1>") {
+          set $backend "backend-service-1";
+      }
+      if ($proxy_protocol_pel_id = "<PEL-ID-2>") {
+          set $backend "backend-service-2";
+      }
+      proxy_pass http://$backend;
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+
