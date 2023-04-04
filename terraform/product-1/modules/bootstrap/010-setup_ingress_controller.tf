@@ -47,6 +47,21 @@ resource "helm_release" "nginx_plus" {
     name = "controller.serviceAccount.imagePullSecretName"
     value = "regcred"
   }
+  
+  set {
+    name = "controller.readyStatus.initialDelaySeconds"
+    value = "30"
+  }
+
+  set {
+    name = "controller.image.repository"
+    value =   var.image_repository
+  }
+
+  set {
+    name = "controller.image.tag"
+    value = var.nginx_plus_tag
+  }
 
   set {
     name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal"
@@ -55,17 +70,13 @@ resource "helm_release" "nginx_plus" {
   }
 
   set {
-    name = "controller.readyStatus.initialDelaySeconds"
-    value = "30"
+    name = "controller.service.beta.kubernetes.io/azure-load-balancer-internal-subnet"
+    value = var.ingress_lb_subnet_name
   }
 
-  set {
-    name = "controller.image.repository"
-    value =   "private-registry.nginx.com/nginx-ic/nginx-plus-ingress"
-  }
 
   set {
-    name = "controller.image.tag"
-    value = var.nginx_plus_tag
+    name = "controller.service.beta.kubernetes.io/azure-load-balancer-resource-group"
+    value = var.resource_group_name
   }
 }
