@@ -24,6 +24,8 @@ provider "azurerm" {
     }
 }
 
+data "azurerm_client_config" "current" { }
+
 locals {
     prefix = var.prefix
     location = var.location

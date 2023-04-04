@@ -16,18 +16,16 @@ resource "azurerm_kubernetes_cluster" "default" {
     type = "SystemAssigned"
   }
 
-# role_based_access_control_enabled =  true
-
-# azure_active_directory_role_based_access_control {
-#     managed = true
-#     admin_group_object_ids = var.admin_group_object_ids
-# azure_rbac_enabled = true
-# }
-	
   default_node_pool {
     name = "defaultnp01"
     vm_size = "Standard_D4s_v3"
     vnet_subnet_id = azurerm_subnet.aks.id
     node_count = 1
   }
+}
+
+resource "azurerm_role_assignment" "example" {
+  scope                = azurerm_virtual_network.default.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_kubernetes_cluster.default.identity[0].principal_id
 }

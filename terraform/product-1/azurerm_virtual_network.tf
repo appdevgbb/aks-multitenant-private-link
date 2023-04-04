@@ -22,7 +22,7 @@ resource "azurerm_subnet" "private_link" {
     resource_group_name = azurerm_resource_group.default.name
     virtual_network_name = azurerm_virtual_network.default.name
 
-    private_link_service_network_policies_enabled = true
+    private_link_service_network_policies_enabled = false
 
     address_prefixes = [
         "10.0.1.0/24"
