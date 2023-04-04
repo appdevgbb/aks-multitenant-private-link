@@ -14,15 +14,20 @@ variable "resource_group_name" {
   type = string
 }
 
-variable "registry_fqdn" {
-  type = string
-}
-
 variable "nginx_plus_image_name" {
   type = string
 }
 
+variable "image_repository" {
+  type = string
+  default = "private-registry.nginx.com/nginx-ic/nginx-plus-ingress"
+}
+
 variable "nginx_plus_tag" {
+  type = string
+}
+
+variable "ingress_lb_subnet_name" {
   type = string
 }
 
