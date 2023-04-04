@@ -4,7 +4,11 @@ Creating Multi-tenanted services in AKS using Azure Private Link Service and TCP
 
 ## Problem Statement
 
+## Prerequisites
 
+- Nginx Plus Developer/30 day Free Trial license
+    - place your ```nginx-repo.jwt``` from free trial into ```${repo_root}/terraform``` - TF will read this file and create the required k8s docker secret credential
+- Ability to create AKS with local accounts (avoiding kubelogin for this demo)
 ## Solution
 
 - leverage (TCP Proxy Protocol v2 TLV from Azure Private Link Service)[https://learn.microsoft.com/en-us/azure/private-link/private-link-service-overview#getting-connection-information-using-tcp-proxy-v2]
