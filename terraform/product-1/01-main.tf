@@ -30,4 +30,6 @@ locals {
     prefix = var.prefix
     location = var.location
     cluster_name = "azplstestcluster" 
+    auto_approval_subscription_ids = var.auto_approval_subscription_ids
+    visibility_subscription_ids = var.visibility_subscription_ids
 }
