@@ -76,6 +76,10 @@ resource "helm_release" "nginx_plus" {
   }
 
   set {
+    name = "controller.enableSnippets"
+    value = "true"
+  }
+  set {
     name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-loadbalancer-enable-proxy-protocol"
     value = "true"
     type = "string"
