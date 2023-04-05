@@ -44,14 +44,20 @@ resource "helm_release" "nginx_plus" {
   }
 
   set {
+    name = "controller.config.use-proxy-protocol"
+    value = "true"
+  }
+
+  set {
     name = "controller.serviceAccount.imagePullSecretName"
     value = "regcred"
   }
-  
+
   set {
-    name = "controller.readyStatus.initialDelaySeconds"
-    value = "30"
+    name = "controller.healthStatus"
+    value = true
   }
+
 
   set {
     name = "controller.image.repository"
@@ -62,6 +68,11 @@ resource "helm_release" "nginx_plus" {
     name = "controller.image.tag"
     value = var.nginx_plus_tag
   }
+  
+  set {
+    name = "controller.readyStatus.initialDelaySeconds"
+    value = "30"
+  }
 
   set {
     name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal"
@@ -69,14 +80,24 @@ resource "helm_release" "nginx_plus" {
     type = "string"
   }
 
-  set {
-    name = "controller.service.beta.kubernetes.io/azure-load-balancer-internal-subnet"
-    value = var.ingress_lb_subnet_name
-  }
+  # set {
+  #   name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-disable-load-balancer-floating-ip	"
+  #   value = "true"
+  # }
 
+  # set {
+  #   name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal-subnet"
+  #   value = var.ingress_lb_subnet_name
+  # }
 
+  # set {
+  #   name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-ipv4"
+  #   value = var.ingress_lb_ip
+  # }
+
+  
   set {
-    name = "controller.service.beta.kubernetes.io/azure-load-balancer-resource-group"
-    value = var.resource_group_name
+    name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-health-probe-request-path"
+    value = "/healthz"
   }
 }
