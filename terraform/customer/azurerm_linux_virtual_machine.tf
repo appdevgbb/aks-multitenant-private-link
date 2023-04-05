@@ -32,8 +32,8 @@ resource "azurerm_linux_virtual_machine" "default" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-minimal-jammy-daily"
-    sku       = "minimal-22_04-daily-lts-gen2"
+    offer     = "0001-com-ubuntu-server-focal"
+    sku       = "20_04-lts-gen2"
     version   = "latest"
   }
 
