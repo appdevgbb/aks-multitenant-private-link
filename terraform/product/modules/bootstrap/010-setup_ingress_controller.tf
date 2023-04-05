@@ -1,7 +1,7 @@
 resource "null_resource" "create_nginx_ingress_namespace" {
 
   triggers = {
-    kubec_config_hash = "${sha256(base64encode(file(local_file.kube_config_server_yaml.filename)))}"
+    kubec_config_hash = "${sha256(base64encode(var.kube_config))}"
   }
 
   provisioner "local-exec" {
@@ -16,7 +16,7 @@ resource "null_resource" "create_nginx_docker_secret" {
     ]
 
   triggers = {
-    kubec_config_hash = "${sha256(base64encode(file(local_file.kube_config_server_yaml.filename)))}"
+    kubec_config_hash = "${sha256(base64encode(var.kube_config))}"
     jwt_hash = "${sha256(local.nginx_jwt)}"
   }
 
@@ -44,20 +44,9 @@ resource "helm_release" "nginx_plus" {
   }
 
   set {
-    name = "controller.config.use-proxy-protocol"
-    value = "true"
-  }
-
-  set {
     name = "controller.serviceAccount.imagePullSecretName"
     value = "regcred"
   }
-
-  set {
-    name = "controller.healthStatus"
-    value = true
-  }
-
 
   set {
     name = "controller.image.repository"
@@ -68,15 +57,38 @@ resource "helm_release" "nginx_plus" {
     name = "controller.image.tag"
     value = var.nginx_plus_tag
   }
-  
-  set {
-    name = "controller.readyStatus.initialDelaySeconds"
-    value = "30"
-  }
 
   set {
     name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-internal"
     value = "true"
+    type = "string"
+  }
+
+  # set {
+  #   name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-backend-protocol"
+  #   value = "tcp"
+  # }
+
+  set {
+    name = "controller.config.entries.proxy-protocol"
+    value = "True"
+    type = "string"
+  }
+
+  set {
+    name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-loadbalancer-enable-proxy-protocol"
+    value = "true"
+    type = "string"
+  }
+
+  set {
+    name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/port_32560_health-probe_protocol"
+    value = "tcp"
+  }
+
+  set {
+    name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/port_32560_health-probe_port"
+    value = "32560"
     type = "string"
   }
 
@@ -95,9 +107,4 @@ resource "helm_release" "nginx_plus" {
   #   value = var.ingress_lb_ip
   # }
 
-  
-  set {
-    name = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-health-probe-request-path"
-    value = "/healthz"
-  }
 }

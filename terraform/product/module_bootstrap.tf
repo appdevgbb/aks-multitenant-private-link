@@ -9,8 +9,6 @@ module "bootstrap" {
     nginx_plus_image_name = "nginx-ingress"
     nginx_plus_tag = "3.1.0"
     
-    resource_group_name = azurerm_resource_group.default.name
-
     ingress_lb_ip = cidrhost(azurerm_subnet.aks_load_balancer.address_prefixes[0], 4)
     ingress_lb_subnet_name = azurerm_subnet.aks_load_balancer.name
 }

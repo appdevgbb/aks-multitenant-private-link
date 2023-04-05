@@ -29,3 +29,11 @@ Creating Multi-tenanted services in AKS using Azure Private Link Service and TCP
 - Customer CIDR/VNET IP address are not used to route traffic - only PLIDs
 
 ![Diagram](img/diagram.png "Diagram")
+
+
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+--namespace nginx-ingress \
+--create-namespace \
+--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
+--set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-internal"=true \
+--set controller.config.use-proxy-protocol=true

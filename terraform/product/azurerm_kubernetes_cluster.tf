@@ -6,7 +6,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   dns_prefix = local.cluster_name
 
   network_profile {
-    network_plugin = "azure"
+    network_plugin = "kubenet"
     network_policy = "calico"
     service_cidr = "172.18.0.0/22"
     dns_service_ip = "172.18.0.5"

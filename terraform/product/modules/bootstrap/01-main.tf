@@ -20,6 +20,7 @@ provider "helm" {
 resource "local_file" "kube_config_server_yaml" {
   filename = format("%s/%s", path.root, "kube_config.yaml")
   content  = var.kube_config
+  file_permission = "0600"
 }
 
 locals {

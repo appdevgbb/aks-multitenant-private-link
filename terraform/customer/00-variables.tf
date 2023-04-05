@@ -14,10 +14,6 @@ variable "location" {
   type = string
 }
 
-variable "pls_id" {
-  type = string
-}
-
 variable "admin_username" {
   type = string
 }
@@ -32,9 +28,5 @@ variable "vm_size" {
 }
 
 variable "myip" {
-  type = string
-}
-
-variable "private_dns_zone_name" {
   type = string
 }
