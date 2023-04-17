@@ -2,19 +2,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: clients-ingress
+  name: customer2-ingress
   annotations:
     nginx.ingress.kubernetes.io/proxy-protocol: "v2"
 spec:
   ingressClassName: nginx
   rules:
-    - host: customer1.testapp.io
+    - host: customer2.testapp.io
       http:
         paths:
         - path: /
           pathType: Prefix
           backend:
             service:
-              name: client1-svc
+              name: customer2-svc
               port:
                 number: 80

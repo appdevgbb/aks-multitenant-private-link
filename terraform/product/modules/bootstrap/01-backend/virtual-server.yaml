@@ -1,0 +1,26 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: customer-vs
+  namespace: nginx-ingress
+spec:
+  http-snippets: |
+    map $proxy_protocol_tlvs$proxy_protocol_tlv_azure_pel_id $backend_name {
+        "536899758" customer2-svc;
+    }
+  host: "customer1.testapp.io"
+  # tls:
+  #   secret: cafe-secret
+  # server-snippets: |
+  #       limit_req zone=mylimit burst=20;
+  upstreams:
+  - name: customer1
+    service: customer1-svc
+    port: 80
+  - name: customer2
+    service: customer2-svc
+    port: 80
+  routes:
+  - path: /      
+    action:
+      pass: customer1

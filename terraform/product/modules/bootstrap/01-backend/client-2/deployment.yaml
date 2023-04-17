@@ -2,17 +2,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    run: client1-webapp
-  name: client1-webapp
+    run: customer2-webapp
+  name: customer2-webapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: client1-webapp
+      run: customer2-webapp
   template:
     metadata:
       labels:
-        run: client1-webapp
+        run: customer2-webapp
     spec:
       containers:
       - image: nginx
@@ -23,13 +23,13 @@ spec:
       volumes:
         - name: index
           configMap:
-            name: client1-html
+            name: customer2-html
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: client1-html
+  name: customer2-html
   namespace: nginx-ingress
 data:
   index.html: |
-    Client 1
+    Customer 2

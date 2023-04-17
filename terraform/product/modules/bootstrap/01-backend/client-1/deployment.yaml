@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: customer1-webapp
+  name: customer1-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: customer1-webapp
+  template:
+    metadata:
+      labels:
+        run: customer1-webapp
+    spec:
+      containers:
+      - image: nginx
+        name: webapp
+        volumeMounts:
+        - name: index
+          mountPath: "/usr/share/nginx/html"                  
+      volumes:
+        - name: index
+          configMap:
+            name: customer1-html
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: customer1-html
+  namespace: nginx-ingress
+data:
+  index.html: |
+    Customer 1

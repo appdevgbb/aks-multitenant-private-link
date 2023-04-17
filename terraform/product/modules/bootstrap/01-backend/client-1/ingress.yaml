@@ -1,0 +1,56 @@
+
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: customer1-ingress
+#   annotations:
+#     nginx.ingress.kubernetes.io/proxy-protocol: "v2"
+#     nginx.ingress.kubernetes.io/proxy-protocol-tlv: "0x000F:16;$proxy_protocol_tlv_azure_pel_id"
+#     nginx.org/server-snippets: |
+#       map $proxy_protocol_tlvs$proxy_protocol_tlv_azure_pel_id $backend_name {
+#         "536899758" customer2-svc;
+#       }
+#       proxy_pass $backend_name:80;
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#   - host: "customer1.testapp.io"
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: client1-svc
+#             port:
+#               number: 80
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-protocol: "true"
+    nginx.ingress.kubernetes.io/proxy-protocol-tlv-azure-pel-id: "on"
+    nginx.org/server-snippets: |
+      proxy_protocol on;
+
+      if ($proxy_protocol_pel_id = "536899758") {
+          rewrite ^/(.*)$ /customer2-svc/$1 break;
+      }
+      if ($proxy_protocol_pel_id = "<PEL-ID-2>") {
+          rewrite ^/(.*)$ /customer1-svc/$1 break;
+      }
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "customer1.testapp.io"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: customer1-svc
+            port:
+              number: 80
